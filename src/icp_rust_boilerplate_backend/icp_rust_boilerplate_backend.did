@@ -1,3 +1,17 @@
+type Error = variant { NotFound : record { msg : text } };
+type Result = variant { Ok : Saloon; Err : Error };
+type Saloon = record {
+  id : nat64;
+  updated_at : opt nat64;
+  name : text;
+  created_at : nat64;
+  saloon_url : text;
+  location : text;
+};
+type SaloonPayload = record { name : text; saloon_url : text; location : text };
 service : {
-    "greet": (text) -> (text) query;
+  add_saloon : (SaloonPayload) -> (opt Saloon);
+  delete_saloon : (nat64) -> (Result);
+  get_saloon : (nat64) -> (Result) query;
+  update_saloon : (nat64, SaloonPayload) -> (Result);
 }
