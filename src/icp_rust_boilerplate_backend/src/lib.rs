@@ -194,7 +194,7 @@ fn search_by_name(name: String) -> Vec<Saloon> {
     })
 }
 
-// Search saloon by Name
+// Search saloon by Location
 #[ic_cdk::query]
 fn search_by_location(location: String) -> Vec<Saloon> {
     SALOON_STORAGE.with(|service| {
