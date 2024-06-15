@@ -1,4 +1,4 @@
-# icp_rust_women_saloon
+# icp_women_saloon
 
 ICP_Women_Saloon is a canister, Rust project on the ICP platform, where users can create a saloon, get a saloon by id, add services to the saloon, delete and update the saloon, see all the saloon available and it also allow users to search a saloon by its name and location.
 
