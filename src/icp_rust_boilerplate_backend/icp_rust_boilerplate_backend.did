@@ -1,5 +1,4 @@
 type Error = variant {
-  AlreadyLiked : record { msg : text };
   NotFound : record { msg : text };
   NotAuthorized : record { msg : text };
 };
@@ -32,6 +31,7 @@ service : {
   get_saloon : (nat64) -> (Result) query;
   get_saloons : () -> (vec Saloon) query;
   search_by_location : (text) -> (vec Saloon) query;
-  search_saloon : (text) -> (vec Saloon) query;
+  search_by_name : (text) -> (vec Saloon) query;
+  search_by_services : (text) -> (vec SaloonService) query;
   update_saloon : (nat64, SaloonPayload) -> (Result);
 }
