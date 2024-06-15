@@ -32,6 +32,5 @@ service : {
   get_saloons : () -> (vec Saloon) query;
   search_by_location : (text) -> (vec Saloon) query;
   search_by_name : (text) -> (vec Saloon) query;
-  search_by_services : (text) -> (vec SaloonService) query;
   update_saloon : (nat64, SaloonPayload) -> (Result);
 }
