@@ -1,17 +1,37 @@
-type Error = variant { NotFound : record { msg : text } };
+type Error = variant {
+  AlreadyLiked : record { msg : text };
+  NotFound : record { msg : text };
+  NotAuthorized : record { msg : text };
+};
 type Result = variant { Ok : Saloon; Err : Error };
 type Saloon = record {
   id : nat64;
   updated_at : opt nat64;
+  owner : text;
   name : text;
+  saloonservices : vec SaloonService;
   created_at : nat64;
   saloon_url : text;
   location : text;
 };
 type SaloonPayload = record { name : text; saloon_url : text; location : text };
+type SaloonService = record {
+  updated_at : opt nat64;
+  service_name : text;
+  service_description : text;
+  created_at : nat64;
+};
+type ServicePayload = record {
+  service_name : text;
+  service_description : text;
+};
 service : {
   add_saloon : (SaloonPayload) -> (opt Saloon);
+  add_services_saloon : (nat64, ServicePayload) -> (Result);
   delete_saloon : (nat64) -> (Result);
   get_saloon : (nat64) -> (Result) query;
+  get_saloons : () -> (vec Saloon) query;
+  search_by_location : (text) -> (vec Saloon) query;
+  search_saloon : (text) -> (vec Saloon) query;
   update_saloon : (nat64, SaloonPayload) -> (Result);
 }
