@@ -265,37 +265,6 @@ fn delete_saloon(id: u64) -> Result<Saloon, Error> {
     Ok(saloon)
 }
 
-// Update a specific service within a saloon
-#[ic_cdk::update]
-fn update_service_saloon(saloon_id: u64, service_name: String, payload: ServicePayload) -> Result<Saloon, Error> {
-    validate_service_payload(&payload)?;
-    let mut saloon = match _get_saloon(&saloon_id) {
-        Some(saloon) => saloon,
-        None => return Err(Error::NotFound {
-            msg: format!("Couldn't find a saloon with id={}", saloon_id),
-        }),
-    };
-
-    if saloon.owner != caller().to_string() {
-        return Err(Error::NotAuthorized {
-            msg: "You are not the owner".into(),
-        });
-    }
-
-    if let Some(service) = saloon.saloonservices.iter_mut().find(|s| s.service_name == service_name) {
-        service.service_name = payload.service_name;
-        service.service_description = payload.service_description;
-        service.updated_at = Some(time());
-    } else {
-        return Err(Error::NotFound {
-            msg: format!("Service with name {} not found in saloon id={}", service_name, saloon_id),
-        });
-    }
-
-    do_insert(&saloon);
-    log_action("update_service_saloon", Some(saloon_id), "Service updated in saloon");
-    Ok(saloon)
-}
 
 // Delete a specific service from a saloon
 #[ic_cdk::update]
@@ -327,31 +296,27 @@ fn delete_service_saloon(saloon_id: u64, service_name: String) -> Result<Saloon,
     Ok(saloon)
 }
 
-// Search saloon by name with pagination
+// Search saloon by name
 #[ic_cdk::query]
-fn search_by_name(name: String, offset: u64, limit: u64) -> Vec<Saloon> {
+fn search_by_name(name: String) -> Vec<Saloon> {
     SALOON_STORAGE.with(|storage| {
         storage
             .borrow()
             .iter()
             .filter(|(_, item)| item.name == name)
-            .skip(offset as usize)
-            .take(limit as usize)
             .map(|(_, item)| item.clone())
             .collect()
     })
 }
 
-// Search saloon by location with pagination
+// Search saloon by location
 #[ic_cdk::query]
-fn search_by_location(location: String, offset: u64, limit: u64) -> Vec<Saloon> {
+fn search_by_location(location: String) -> Vec<Saloon> {
     SALOON_STORAGE.with(|storage| {
         storage
             .borrow()
             .iter()
             .filter(|(_, item)| item.location == location)
-            .skip(offset as usize)
-            .take(limit as usize)
             .map(|(_, item)| item.clone())
             .collect()
     })

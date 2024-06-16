@@ -1,6 +1,7 @@
 type Error = variant {
   NotFound : record { msg : text };
   NotAuthorized : record { msg : text };
+  BadRequest : record { msg : text };
 };
 type Result = variant { Ok : Saloon; Err : Error };
 type Saloon = record {
@@ -25,11 +26,12 @@ type ServicePayload = record {
   service_description : text;
 };
 service : {
-  add_saloon : (SaloonPayload) -> (opt Saloon);
+  add_saloon : (SaloonPayload) -> (Result);
   add_services_saloon : (nat64, ServicePayload) -> (Result);
   delete_saloon : (nat64) -> (Result);
+  delete_service_saloon : (nat64, text) -> (Result);
   get_saloon : (nat64) -> (Result) query;
-  get_saloons : () -> (vec Saloon) query;
+  get_saloons : (nat64, nat64) -> (vec Saloon) query;
   search_by_location : (text) -> (vec Saloon) query;
   search_by_name : (text) -> (vec Saloon) query;
   update_saloon : (nat64, SaloonPayload) -> (Result);
